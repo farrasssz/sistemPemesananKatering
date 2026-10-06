@@ -89,6 +89,19 @@
             <p class="lead mb-0">A simple and elegant app using Bootstrap 5 and Laravel Blade.</p>
         </div>
     </section>
+<div class="card-body">
+    <h5 class="card-title">Form Pertanyaan</h5>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+</div>
 
     <!-- Content Section -->
     <section id="content" class="container ">
