@@ -156,6 +156,28 @@
             </div>
 
             <div class="col-md-6">
+                <div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Form Pertanyaan</h5>
+
+        <form action="{{ route('question.store') }}" method="POST"> 
+            @csrf
+            <div class="mb-3">
+                <label form="nama"  class="form-label">Nama</label>
+                <input type="text" class="form-control" name="nama">
+            </div>
+            <div class="mb-3">
+                <label form="email" class="from-control" class="form-label">Email</label>
+                <input type="text" class="form-control" name="email">
+            </div>
+            <div class="mb-3">
+                <label for="pertanyaan" class="form-label">Pertanyaan</label>
+                <textarea class="form-control" name="pertanyaan" rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Kirim Pertanyaan</button>
+        </form>
+    </div>
+</div>
                 {{-- Alerts --}}
                 <div class="card ">
                     <div class="card-body">
