@@ -38,7 +38,27 @@ class QuestionController extends Controller
         $data['email'] = $request->email;
         $data['pertanyaan'] = $request->pertanyaan;
 
+        // Disimpan di session (bukan flash) supaya data tetap ada saat
+        // halaman /home me-render pesan, lalu diteruskan ke halaman output.
+        session()->put('respon_data', $data);
+
         return redirect()->back()->with('info', 'Oops... Saldo Kamu Kurang!');
+    }
+
+    /**
+     * Halaman output / laporan pertanyaan yang dikirim.
+     */
+    public function respon()
+    {
+        $data = session('respon_data');
+
+        if (! $data) {
+            return redirect()->route('home');
+        }
+
+        session()->forget('respon_data');
+
+        return view('home-question-respon', $data);
     }
 
     /**

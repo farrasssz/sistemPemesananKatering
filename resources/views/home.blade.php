@@ -101,6 +101,16 @@
             </ul>
         </div>
     @endif
+
+    {{-- Pesan flash (mis. "Oops... Saldo Kamu Kurang!") --}}
+    @if (session('info'))
+        <div class="alert alert-info" id="flash-info">
+            {{ session('info') }}
+            <a href="{{ route('question.respon') }}" class="alert-link ms-2" id="link-respon">
+                Lanjut ke halaman output &rarr;
+            </a>
+        </div>
+    @endif
 </div>
 
     <!-- Content Section -->
@@ -177,15 +187,15 @@
             @csrf
             <div class="mb-3">
                 <label form="nama"  class="form-label">Nama</label>
-                <input type="text" class="form-control" name="nama">
+                <input type="text" class="form-control" name="nama" value="{{ old('nama') }}">
             </div>
             <div class="mb-3">
                 <label form="email" class="from-control" class="form-label">Email</label>
-                <input type="text" class="form-control" name="email">
+                <input type="text" class="form-control" name="email" value="{{ old('email') }}">
             </div>
             <div class="mb-3">
                 <label for="pertanyaan" class="form-label">Pertanyaan</label>
-                <textarea class="form-control" name="pertanyaan" rows="4"></textarea>
+                <textarea class="form-control" name="pertanyaan" rows="4">{{ old('pertanyaan') }}</textarea>
             </div>
             <button type="submit" class="btn btn-primary">Kirim Pertanyaan</button>
         </form>
@@ -268,6 +278,35 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{-- Auto redirect ke halaman output setelah pesan saldo kurang tampil --}}
+    @if (session('respon_data'))
+        <script>
+            (function () {
+                var countdown = 3;
+                var link = document.getElementById('link-respon');
+
+                if (link) {
+                    link.textContent = 'Lanjut ke halaman output dalam ' + countdown + ' detik...';
+                }
+
+                var timer = setInterval(function () {
+                    countdown--;
+
+                    if (link) {
+                        link.textContent = countdown > 0
+                            ? 'Lanjut ke halaman output dalam ' + countdown + ' detik...'
+                            : 'Mengalihkan ke halaman output...';
+                    }
+
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        window.location.href = '{{ route('question.respon') }}';
+                    }
+                }, 1000);
+            })();
+        </script>
+    @endif
 </body>
 
 </html>
