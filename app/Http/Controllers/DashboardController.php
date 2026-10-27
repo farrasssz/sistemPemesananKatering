@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Biodata;
 
-class dashboardController extends Controller
+class DashboardController extends Controller
 {
-    public function index(){
-        return view('admin.dashboard');
+    public function index()
+    {
+        $total  = Biodata::count();
+        $terbaru = Biodata::latest()->take(5)->get();
+
+        return view('dashboard', compact('total', 'terbaru'));
     }
 }
