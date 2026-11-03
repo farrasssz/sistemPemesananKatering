@@ -27,38 +27,14 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
-        $request->validate([
-            'nama' => 'required|max:10',
-            'email' => ['required', 'email'],
-            'pertanyaan' => 'required|max:300|min:8',
-        ]);
-
-        $data['nama']   = $request->nama;
-        $data['email'] = $request->email;
+        // dd($request->all());
+        
+        $data['nama']       = $request->nama;
+        $data['email']      = $request->email;
         $data['pertanyaan'] = $request->pertanyaan;
-
-        // Disimpan di session (bukan flash) supaya data tetap ada saat
-        // halaman /home me-render pesan, lalu diteruskan ke halaman output.
-        session()->put('respon_data', $data);
-
-        return redirect()->back()->with('info', 'Oops... Saldo Kamu Kurang!');
-    }
-
-    /**
-     * Halaman output / laporan pertanyaan yang dikirim.
-     */
-    public function respon()
-    {
-        $data = session('respon_data');
-
-        if (! $data) {
-            return redirect()->route('home');
-        }
-
-        session()->forget('respon_data');
-
+       return redirect('/home')->with('info', 'Data berhasil dimasukkan!');
         return view('home-question-respon', $data);
+
     }
 
     /**
@@ -71,7 +47,7 @@ class QuestionController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     */
+     */ 
     public function edit(string $id)
     {
         //

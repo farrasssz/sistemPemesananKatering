@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use app\Http\Controllers\HomeController;
 
 class HomeController extends Controller
 {
@@ -12,14 +11,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        /* atau Cara 2 */
-    $data = [
-	      'username'        => 'Heroku',
+        $data = [
+	      'username'        => 'Laravel Fatir',
 	      'last_login'      => date('Y-m-d H:i:s'),
 	      'list_pendidikan' => ['SD', 'SMP', 'SMA', 'S1', 'S2', 'S3']
 	  ];
-	  return view('home', $data);
-        
+      return view('home', $data);
+        //
     }
 
     /**

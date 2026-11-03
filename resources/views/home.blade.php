@@ -82,36 +82,10 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h1 class="display-6 mb-2">Welcome Abroad!</h1>
-
-            <h1> {{ $username }} <h1>
-            <p> {{ $last_login }} <p>
-            <p class="lead mb-0">A simple and elegant app using Bootstrap 5 and Laravel Blade.</p>
+            <h1 class="display-6 mb-2">{{$username}}</h1>
+            <p class="lead mb-0">{{$last_login}}</p>
         </div>
     </section>
-<div class="card-body">
-    <h5 class="card-title">Form Pertanyaan</h5>
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    {{-- Pesan flash (mis. "Oops... Saldo Kamu Kurang!") --}}
-    @if (session('info'))
-        <div class="alert alert-info" id="flash-info">
-            {{ session('info') }}
-            <a href="{{ route('question.respon') }}" class="alert-link ms-2" id="link-respon">
-                Lanjut ke halaman output &rarr;
-            </a>
-        </div>
-    @endif
-</div>
 
     <!-- Content Section -->
     <section id="content" class="container ">
@@ -183,19 +157,36 @@
     <div class="card-body">
         <h5 class="card-title">Form Pertanyaan</h5>
 
-        <form action="{{ route('question.store') }}" method="POST"> 
+        @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+        @endif
+
+
+        @if (session('info'))
+    <div class="alert alert-info">
+        {!! session('info') !!}
+    </div>
+        @endif
+
+        <form action="{{ route('question.store') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label form="nama"  class="form-label">Nama</label>
-                <input type="text" class="form-control" name="nama" value="{{ old('nama') }}">
+                <label for="nama" class="form-label">Nama</label>
+                <input type="text" class="form-control" name="nama">
             </div>
             <div class="mb-3">
-                <label form="email" class="from-control" class="form-label">Email</label>
-                <input type="text" class="form-control" name="email" value="{{ old('email') }}">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" class="form-control" name="email">
             </div>
             <div class="mb-3">
                 <label for="pertanyaan" class="form-label">Pertanyaan</label>
-                <textarea class="form-control" name="pertanyaan" rows="4">{{ old('pertanyaan') }}</textarea>
+                <textarea class="form-control" rows="4" name="pertanyaan"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Kirim Pertanyaan</button>
         </form>
@@ -278,35 +269,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-    {{-- Auto redirect ke halaman output setelah pesan saldo kurang tampil --}}
-    @if (session('respon_data'))
-        <script>
-            (function () {
-                var countdown = 3;
-                var link = document.getElementById('link-respon');
-
-                if (link) {
-                    link.textContent = 'Lanjut ke halaman output dalam ' + countdown + ' detik...';
-                }
-
-                var timer = setInterval(function () {
-                    countdown--;
-
-                    if (link) {
-                        link.textContent = countdown > 0
-                            ? 'Lanjut ke halaman output dalam ' + countdown + ' detik...'
-                            : 'Mengalihkan ke halaman output...';
-                    }
-
-                    if (countdown <= 0) {
-                        clearInterval(timer);
-                        window.location.href = '{{ route('question.respon') }}';
-                    }
-                }, 1000);
-            })();
-        </script>
-    @endif
 </body>
 
 </html>
