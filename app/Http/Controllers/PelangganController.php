@@ -24,6 +24,7 @@ class PelangganController extends Controller
      */
     public function store(Request $request)
     {
+<<<<<<< HEAD
         // dd($request->all());
         $data['first_name'] = $request->first_name;
         $data['last_name']  = $request->last_name;
@@ -33,6 +34,27 @@ class PelangganController extends Controller
         $data['phone']      = $request->phone;
         Pelanggan::create($data);
         return redirect()->route('pelanggan.index')->with('success', 'Penambahan Data Berhasil!');
+=======
+        $request->validate([
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'birthday' => 'nullable|date',
+            'gender' => 'required|in:Male,Female,Other',
+            'email' => 'required|email|unique:pelanggan,email',
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        $data['first_name'] = $request->first_name;
+        $data['last_name'] = $request->last_name;
+        $data['birthday'] = $request->birthday;
+        $data['gender'] = $request->gender;
+        $data['email'] = $request->email;
+        $data['phone'] = $request->phone;
+
+        Pelanggan::create($data);
+
+        return redirect()->route('pelanggan.index')->with('success','Penambahan Data Berhasil!');
+>>>>>>> e906b5af426d0f13d45f304b832cf8c537f38a5a
     }
     /**
      * Display the specified resource.
@@ -56,6 +78,7 @@ class PelangganController extends Controller
     {
         $pelanggan_id = $id;
         $pelanggan = Pelanggan::findOrFail($pelanggan_id);
+<<<<<<< HEAD
         $pelanggan->first_name = $request->first_name;
         $pelanggan->last_name  = $request->last_name;
         $pelanggan->birthday   = $request->birthday;
@@ -64,6 +87,15 @@ class PelangganController extends Controller
         $pelanggan->phone      = $request->phone;
         $pelanggan->save();
         return redirect()->route('pelanggan.index')->with('success','perubahan Data Berhasil!');
+=======
+
+        $pelanggan->first_name = $request->first_name;
+        $pelanggan->last_name = $request->last_name;
+        $pelanggan->birthday = $request->birthday;
+        $pelanggan->gender = $request->gender;
+        $pelanggan->email = $request->email;
+        $pelanggan->phone = $request->phone;
+>>>>>>> e906b5af426d0f13d45f304b832cf8c537f38a5a
     }
     /**
      * Remove the specified resource from storage.
