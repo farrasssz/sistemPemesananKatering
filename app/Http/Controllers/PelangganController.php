@@ -1,35 +1,40 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Pelanggan;
+use Illuminate\Http\Request;
 
 class PelangganController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-        public function index(Request $request)
-        {
-            $filterableColumns = ['gender'];
+    public function index(Request $request)
+    {
+        // $data['dataPelanggan'] = Pelanggan::paginate(10);
+        // return view('admin.pelanggan.index', $data);
 
-            $searchableColumns = ['first_name'];
-            //$pageData['dataPelanggan'] = Pelanggan::filter($request, $filterableColumns)->paginate(10);
-            $data['dataPelanggan'] = Pelanggan::filter($request, $filterableColumns)
-        ->search($request, $searchableColumns) // dan ini
-        ->paginate(10)->withQueryString();
-            return view('admin.pelanggan.index', $data);
-		//$data['dataPelanggan'] = Pelanggan::paginate(10);
-		//return view('admin.pelanggan.index',$data);
-}
+        // Daftar kolom yang bisa difilter sesuai name pada form
+        $filterableColumns = ['gender'];
+
+        $searchableColumns = ['first_name','last_name','email'];
+
+        // Gunakan scope filter untuk memproses query
+        $data['dataPelanggan'] = Pelanggan::filter($request, $filterableColumns)
+        ->search($request,$searchableColumns)
+        ->paginate(10)
+        ->withQueryString();
+
+        return view('admin.pelanggan.index', $data);
+
+    }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()    
+    public function create()
     {
-		return view('admin.pelanggan.create');
+        return view('admin.pelanggan.create');
     }
 
     /**
@@ -37,16 +42,20 @@ class PelangganController extends Controller
      */
     public function store(Request $request)
     {
-        $data['first_name'] = $request->first_name;
-		$data['last_name'] = $request->last_name;
-		$data['birthday'] = $request->birthday;
-		$data['gender'] = $request->gender;
-		$data['email'] = $request->email;
-		$data['phone'] = $request->phone;
-		
-		Pelanggan::create($data);
-		
-		return redirect()->route('pelanggan.index')->with('success','Penambahan Data Berhasil!');
+        // Tambahkan Validasi Form
+        $request->validate([
+            'first_name' => 'required|string|max:100',
+            'last_name'  => 'required|string|max:100',
+            'birthday'   => 'nullable|date|date_format:Y-m-d|before_or_equal:today', // Validasi tanggal yang benar
+            'gender'     => 'nullable|in:Male,Female,Other',
+            'email'      => 'required|email|unique:cv_2555301126,email',
+            'phone'      => 'nullable|string|max:20',
+        ]);
+
+        // Simpan data setelah lolos validasi
+        Pelanggan::create($request->all());
+
+        return redirect()->route('pelanggan.index')->with('success', 'Data pelanggan berhasil ditambahkan.');
     }
 
     /**
@@ -72,18 +81,17 @@ class PelangganController extends Controller
     public function update(Request $request, string $id)
     {
         $pelanggan_id = $id;
-        $pelanggan = Pelanggan::findOrFail($pelanggan_id);
+        $pelanggan    = Pelanggan::findOrFail($pelanggan_id);
 
         $pelanggan->first_name = $request->first_name;
-        $pelanggan->last_name = $request->last_name;
-        $pelanggan->birthday = $request->birthday;
-        $pelanggan->gender = $request->gender;
-        $pelanggan->email = $request->email;
-        $pelanggan->phone = $request->phone;
+        $pelanggan->last_name  = $request->last_name;
+        $pelanggan->birthday   = $request->birthday;
+        $pelanggan->gender     = $request->gender;
+        $pelanggan->email      = $request->email;
+        $pelanggan->phone      = $request->phone;
 
         $pelanggan->save();
-return redirect()->route('pelanggan.index')->with('success', 'Perubahan Data Berhasil!');
-
+        return redirect()->route('pelanggan.index')->with('success', 'perubahan Data Berhasil!');
     }
 
     /**
@@ -91,6 +99,16 @@ return redirect()->route('pelanggan.index')->with('success', 'Perubahan Data Ber
      */
     public function destroy(string $id)
     {
-        //
+        $pelanggan = Pelanggan::findOrFail($id);
+
+        $pelanggan->delete();
+        return redirect()->route('pelanggan.index')->with('success', 'Data berhasil dihapus');
     }
+
+    public function showCv($id)
+    {
+        $pelanggan = Pelanggan::findOrFail($id);
+        return view('admin.pelanggan.cv', compact('pelanggan')); // Ditambah kata admin. di depannya
+    }
+
 }

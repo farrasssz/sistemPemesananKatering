@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -28,13 +27,40 @@ class QuestionController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        
-        $data['nama']       = $request->nama;
-        $data['email']      = $request->email;
-        $data['pertanyaan'] = $request->pertanyaan;
-       return redirect('/home')->with('info', 'Data berhasil dimasukkan!');
-        return view('home-question-respon', $data);
+        $request->validate([
+            'nama'       => 'required|max:10',
+            'email'      => ['required', 'email'],
+            'pertanyaan' => 'required|max:300|min:8',
+        ]);
 
+        // $data['nama']       = $request->nama;
+        // $data['email']      = $request->email;
+        // $data['pertanyaan'] = $request->pertanyaan;
+        $data = $request->only([
+            'nama',
+            'email',
+            'pertanyaan',
+        ]);
+
+        // Simpan data jawaban ke session
+        session()->put('jawaban', $data);
+
+        return redirect('/home')
+            ->with('info', 'Data Berhasil Dikirim');
+        // return redirect('/home')->with('info', 'Data Berhasil Dikirim');
+        // return view('home-question-respon', $data);
+    }
+
+    // method baru
+    public function response()
+    {
+        $data = session('jawaban');
+
+        if (! $data) {
+            return redirect('/home');
+        }
+
+        return view('home-question-respon', $data);
     }
 
     /**
@@ -47,7 +73,7 @@ class QuestionController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     */ 
+     */
     public function edit(string $id)
     {
         //

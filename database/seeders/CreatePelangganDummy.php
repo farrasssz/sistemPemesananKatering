@@ -1,12 +1,9 @@
 <?php
-
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Factory;
 use Illuminate\Support\Facades\DB;
-
 class CreatePelangganDummy extends Seeder
 {
     /**
@@ -16,7 +13,7 @@ class CreatePelangganDummy extends Seeder
     $faker = \Faker\Factory::create('id_ID');
 
     foreach (range(1, 100) as $index) {
-        DB::table('pelanggan')->insert([
+        DB::table('cv_2555301126')->insert([
             'first_name' => $faker->firstName,
             'last_name'  => $faker->lastName,
             'birthday'   => $faker->date('Y-m-d', '2005-12-31'),
